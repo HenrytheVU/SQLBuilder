@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Union extends BaseSQL {
+public class Union extends AbstractQuery {
     public Union(StringBuilder query, List<Object> params) {
         super(query, params);
     }

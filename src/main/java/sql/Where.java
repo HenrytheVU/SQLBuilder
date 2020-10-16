@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Where extends BaseSQL {
+public class Where extends AbstractQuery {
     public Where(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class Offset extends BaseSQL {
+public class Offset extends AbstractQuery {
     public Offset(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class RightJoin extends BaseSQL {
+public class RightJoin extends AbstractQuery {
     public RightJoin(StringBuilder query, List<Object> params) {
         super(query, params);
     }

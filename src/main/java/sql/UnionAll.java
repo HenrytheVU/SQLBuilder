@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class UnionAll extends BaseSQL {
+public class UnionAll extends AbstractQuery {
     public UnionAll(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -3,7 +3,7 @@ package sql;
 import java.util.Collections;
 import java.util.List;
 
-public class InsertInto extends BaseSQL {
+public class InsertInto extends AbstractQuery {
     public InsertInto(StringBuilder query, List<Object> params) {
         super(query, params);
     }

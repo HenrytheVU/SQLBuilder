@@ -3,7 +3,7 @@ package sql;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ForBusinessTimeBetween extends BaseSQL {
+public class ForBusinessTimeBetween extends AbstractQuery {
     public ForBusinessTimeBetween(StringBuilder query, List<Object> params) {
         super(query, params);
     }

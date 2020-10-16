@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class ForBusinessTimeAsOf extends BaseSQL {
+public class ForBusinessTimeAsOf extends AbstractQuery {
     public ForBusinessTimeAsOf(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -3,7 +3,7 @@ package sql;
 import java.time.LocalDate;
 import java.util.List;
 
-public class DeleteFrom extends BaseSQL {
+public class DeleteFrom extends AbstractQuery {
     public DeleteFrom(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class Join extends BaseSQL {
+public class Join extends AbstractQuery {
     public Join(StringBuilder query, List<Object> params) {
         super(query, params);
     }

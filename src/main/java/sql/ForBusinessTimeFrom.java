@@ -3,7 +3,7 @@ package sql;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ForBusinessTimeFrom extends BaseSQL {
+public class ForBusinessTimeFrom extends AbstractQuery {
     public ForBusinessTimeFrom(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class And extends BaseSQL {
+public class And extends AbstractQuery {
     public And(StringBuilder query, List<Object> params) {
         super(query, params);
     }

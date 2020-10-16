@@ -5,7 +5,7 @@ import com.sun.istack.internal.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Update extends BaseSQL {
+public class Update extends AbstractQuery {
     public Update(StringBuilder query, List<Object> params) {
         super(query, params);
     }

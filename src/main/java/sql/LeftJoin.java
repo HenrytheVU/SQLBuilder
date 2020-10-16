@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class LeftJoin extends BaseSQL {
+public class LeftJoin extends AbstractQuery {
     public LeftJoin(StringBuilder query, List<Object> params) {
         super(query, params);
     }

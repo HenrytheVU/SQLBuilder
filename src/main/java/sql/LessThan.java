@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class LessThan extends BaseSQL {
+public class LessThan extends AbstractQuery {
     public LessThan(StringBuilder query, List<Object> params) {
         super(query, params);
     }

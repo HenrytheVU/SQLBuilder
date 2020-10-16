@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Or extends BaseSQL {
+public class Or extends AbstractQuery {
     public Or(StringBuilder query, List<Object> params) {
         super(query, params);
     }

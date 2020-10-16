@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class OrderBy extends BaseSQL {
+public class OrderBy extends AbstractQuery {
     public OrderBy(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class Count extends BaseSQL {
+public class Count extends AbstractQuery {
     public Count(StringBuilder query, List<Object> params) {
         super(query, params);
     }

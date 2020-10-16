@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class Equal extends BaseSQL {
+public class Equal extends AbstractQuery {
     public Equal(StringBuilder query, List<Object> params) {
         super(query, params);
     }

@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class Between extends BaseSQL {
+public class Between extends AbstractQuery {
     public Between(StringBuilder query, List<Object> params) {
         super(query, params);
     }

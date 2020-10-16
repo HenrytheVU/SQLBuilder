@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class NotEqual extends BaseSQL {
+public class NotEqual extends AbstractQuery {
     public NotEqual(StringBuilder query, List<Object> params) {
         super(query, params);
     }

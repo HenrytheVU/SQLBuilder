@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class From extends BaseSQL {
+public class From extends AbstractQuery {
     public From(StringBuilder query, List<Object> params) {
         super(query, params);
     }

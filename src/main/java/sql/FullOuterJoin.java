@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class FullOuterJoin extends BaseSQL {
+public class FullOuterJoin extends AbstractQuery {
     public FullOuterJoin(StringBuilder query, List<Object> params) {
         super(query, params);
     }

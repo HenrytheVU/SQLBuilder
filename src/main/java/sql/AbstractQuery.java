@@ -6,12 +6,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class BaseSQL {
+public abstract class AbstractQuery {
 
     final StringBuilder query;
     final List<Object> params;
 
-    public BaseSQL(StringBuilder query, List<Object> params) {
+    public AbstractQuery(StringBuilder query, List<Object> params) {
         this.query = query;
         this.params = params;
     }

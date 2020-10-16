@@ -2,7 +2,7 @@ package sql;
 
 import java.util.List;
 
-public class As extends BaseSQL {
+public class As extends AbstractQuery {
     public As(StringBuilder query, List<Object> params) {
         super(query, params);
     }

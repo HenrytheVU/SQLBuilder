@@ -4,7 +4,7 @@ import com.sun.istack.internal.NotNull;
 
 import java.util.List;
 
-public class To extends BaseSQL {
+public class To extends AbstractQuery {
     public To(StringBuilder query, List<Object> params) {
         super(query, params);
     }
