@@ -1,10 +1,9 @@
-package elements;
+package sql;
 
 import java.util.List;
 
-public class Select extends AbstractSQLElement {
-
-    public Select(StringBuilder query, List<Object> params) {
+public class Count extends BaseSQL {
+    public Count(StringBuilder query, List<Object> params) {
         super(query, params);
     }
 

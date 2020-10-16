@@ -1,8 +1,8 @@
-package elements;
+package sql;
 
 import java.util.List;
 
-public class ForBusinessTimeAsOf extends AbstractSQLElement {
+public class ForBusinessTimeAsOf extends BaseSQL {
     public ForBusinessTimeAsOf(StringBuilder query, List<Object> params) {
         super(query, params);
     }

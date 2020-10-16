@@ -1,13 +1,13 @@
-package elements;
+package sql;
 
 import java.util.List;
 
-public class OrderBy extends AbstractSQLElement {
-    public OrderBy(StringBuilder query, List<Object> params) {
+public class Offset extends BaseSQL {
+    public Offset(StringBuilder query, List<Object> params) {
         super(query, params);
     }
 
-    public FetchNextRowsOnly fetchNexRowsOnly(int n) {
+    public FetchNextRowsOnly fetchNextRowsOnly(Integer n) {
         query.append(" FETCH NEXT ").append(n).append(" ROWS ONLY");
         return new FetchNextRowsOnly(query, params);
     }
