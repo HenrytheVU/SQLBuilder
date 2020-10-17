@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SQLBuilderTest {
 
     @Test
-    void testSelect() {
+    void selectFrom() {
         String expected = "SELECT CustomerName, City FROM Customers";
         AbstractQuery sql = SQLBuilder.select("CustomerName", "City").from("Customers");
         assertEquals(expected, sql.getQuery());
@@ -21,7 +21,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectDistinct() {
+    void selectDistinctFrom() {
         String expected = "SELECT DISTINCT Country FROM Customers";
         AbstractQuery sql = SQLBuilder.selectDistinct("Country").from("Customers");
         assertEquals(expected, sql.getQuery());
@@ -32,7 +32,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectCount() {
+    void selectCountFrom() {
         String expected = "SELECT COUNT (ProductID) FROM Products";
         AbstractQuery sql = SQLBuilder.selectCount("ProductID").from("Products");
         assertEquals(expected, sql.getQuery());
@@ -44,14 +44,14 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectCountDistinct() {
+    void selectCountDistinctFrom() {
         String expected = "SELECT COUNT (DISTINCT Country) FROM Customers";
         AbstractQuery sql = SQLBuilder.selectCountDistinct("Country").from("Customers");
         assertEquals(expected, sql.getQuery());
     }
 
     @Test
-    void testSelectFromWhereEqual() {
+    void selectFromWhereEqual() {
         String expected = "SELECT * FROM Customers WHERE Country = 'Mexico'";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").equal("Mexico");
         assertEquals(expected, sql.getQuery());
@@ -66,7 +66,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereNotEqual() {
+    void selectFromWhereNotEqual() {
         String expected = "SELECT * FROM Customers WHERE Country <> 'Mexico'";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").notEqual("Mexico");
         assertEquals(expected, sql.getQuery());
@@ -81,7 +81,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereGreaterThan() {
+    void selectFromWhereGreaterThan() {
         String expected = "SELECT * FROM Customers WHERE Country > 'Mexico'";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").greaterThan("Mexico");
         assertEquals(expected, sql.getQuery());
@@ -96,7 +96,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereGreaterOrEqual() {
+    void selectFromWhereGreaterOrEqual() {
         String expected = "SELECT * FROM Customers WHERE Country >= 'Mexico'";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").greaterOrEqual("Mexico");
         assertEquals(expected, sql.getQuery());
@@ -111,7 +111,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereLessThan() {
+    void selectFromWhereLessThan() {
         String expected = "SELECT * FROM Customers WHERE Country < 'Mexico'";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").lessThan("Mexico");
         assertEquals(expected, sql.getQuery());
@@ -126,7 +126,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereLessOrEqual() {
+    void selectFromWhereLessOrEqual() {
         String expected = "SELECT * FROM Customers WHERE Country <= 'Mexico'";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").lessOrEqual("Mexico");
         assertEquals(expected, sql.getQuery());
@@ -141,7 +141,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereEqAndNeAndLtAndGtAndLeAndGe() {
+    void selectFromWhereEqAndNeAndLtAndGtAndLeAndGe() {
         String expected = "SELECT * FROM Customers WHERE Country = 'Mexico' AND City <> 'CityName' AND Price < 50 AND Unit > 'UnitDescription' AND Name <= 'Alice' AND ID >= 99";
         AbstractQuery sql = SQLBuilder.select().from("Customers")
                 .where("Country").eq("Mexico")
@@ -154,7 +154,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromOrderBy() {
+    void selectFromOrderBy() {
         String expected = "SELECT * FROM Customers ORDER BY Country";
         AbstractQuery sql = SQLBuilder.select().from("Customers").orderBy("Country");
         assertEquals(expected, sql.getQuery());
@@ -173,7 +173,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereIsNotNull() {
+    void selectFromWhereIsNotNull() {
         String expected = "SELECT CustomerName, ContactName, Address FROM Customers WHERE Address IS NOT NULL";
         AbstractQuery sql = SQLBuilder.select("CustomerName", "ContactName", "Address")
                 .from("Customers").where("Address").isNotNull();
@@ -181,7 +181,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testInsertInto() {
+    void insertIntoValues() {
         String expected = "INSERT INTO Customers (CustomerName, City, Country, Price) VALUES ('Cardinal', 'Stavanger', 'Norway', 99)";
         AbstractQuery sql = SQLBuilder
                 .insertInto("Customers", "CustomerName", "City", "Country", "Price")
@@ -192,7 +192,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testUpdate() {
+    void updateSet() {
         String expected = "UPDATE Customers SET ContactName = 'Alfred Schmidt', City = 'Frankfurt', Price = 99 WHERE CustomerID = 1";
         AbstractQuery sql = SQLBuilder.update("Customers")
                 .set("ContactName", "Alfred Schmidt")
@@ -214,7 +214,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromGroupBy() {
+    void selectFromGroupBy() {
         String expected = "SELECT working_area, COUNT (*) FROM agents GROUP BY working_area";
         AbstractQuery sql = SQLBuilder.select("working_area").count().from("agents").groupBy("working_area");
         assertEquals(expected, sql.getQuery());
@@ -225,7 +225,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromForBusinessTimeAsOfWhere() {
+    void selectFromForBusinessTimeAsOfWhere() {
         String expected = "SELECT PRICE FROM STOCK FOR BUSINESS_TIME AS OF '2020-01-01' WHERE STOCK_NAME = 'APPLE INC'";
         AbstractQuery sql = SQLBuilder.select("PRICE").from("STOCK")
                 .forBusinessTimeAsOf(LocalDate.of(2020, 1, 1))
@@ -234,7 +234,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testUpdateForPortionBusinessTimeFromToWhere() {
+    void updateForPortionBusinessTimeFromToWhere() {
         String expected = "UPDATE inventory FOR PORTION OF BUSINESS_TIME FROM '2015-06-01' TO '2016-09-01' SET price = 900000 WHERE id = 1111";
         AbstractQuery sql = SQLBuilder.update("inventory")
                 .forPortionOfBusinessTimeFrom(LocalDate.of(2015, 6, 1))
@@ -245,7 +245,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromForBusinessTimeFromTo() {
+    void selectFromForBusinessTimeFromTo() {
         String expected = "SELECT * FROM policy FOR BUSINESS_TIME FROM '2014-01-01' TO '2016-01-01' WHERE id = 1414";
         AbstractQuery sql = SQLBuilder.select().from("policy")
                 .forBusinessTimeFrom(LocalDate.of(2014, 1, 1))
@@ -255,7 +255,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testDeleteFromForPortionOfBusinessTimeFromToWhere() {
+    void deleteFromForPortionOfBusinessTimeFromToWhere() {
         String expected = "DELETE FROM policy_info FOR PORTION OF BUSINESS_TIME FROM '2008-06-15' TO '2008-08-15' WHERE policy_id = 'A123'";
         AbstractQuery sql = SQLBuilder.deleteFrom("policy_info")
                 .forPortionOfBusinessTimeFrom(LocalDate.of(2008, 6, 15))
@@ -265,14 +265,14 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testDeleteFromWhere() {
+    void deleteFromWhere() {
         String expected = "DELETE FROM Customers WHERE CustomerName = 'Alfreds Futterkiste'";
         AbstractQuery sql = SQLBuilder.deleteFrom("Customers").where("CustomerName").eq("Alfreds Futterkiste");
         assertEquals(expected, sql.getQuery());
     }
 
     @Test
-    void testSelectFromWhereLike() {
+    void selectFromWhereLike() {
         String expected = "SELECT * FROM Customers WHERE CustomerName LIKE 'a%'";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("CustomerName").startsWith("a");
         assertEquals(expected, sql.getQuery());
@@ -291,7 +291,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereIn() {
+    void selectFromWhereIn() {
         String expected = "SELECT * FROM Customers WHERE Country IN ('Germany', 'France', 'UK')";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").in("Germany", "France", "UK");
         assertEquals(expected, sql.getQuery());
@@ -302,7 +302,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereNotIn() {
+    void selectFromWhereNotIn() {
         String expected = "SELECT * FROM Customers WHERE Country NOT IN ('Germany', 'France', 'UK')";
         AbstractQuery sql = SQLBuilder.select().from("Customers").where("Country").notIn("Germany", "France", "UK");
         assertEquals(expected, sql.getQuery());
@@ -312,21 +312,21 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereBetweenAndNotIn() {
+    void selectFromWhereBetweenAndNotIn() {
         String expected = "SELECT * FROM Products WHERE Price BETWEEN 10 AND 20 AND CategoryID NOT IN (1, 2, 3)";
         AbstractQuery sql = SQLBuilder.select().from("Products").where("Price").between(10, 20).and("CategoryID").notIn(1, 2, 3);
         assertEquals(expected, sql.getQuery());
     }
 
     @Test
-    void testSelectFromWhereBetweenOrNotIn() {
+    void selectFromWhereBetweenOrNotIn() {
         String expected = "SELECT * FROM Products WHERE Price BETWEEN 10 AND 20 OR CategoryID NOT IN (1, 2, 3)";
         AbstractQuery sql = SQLBuilder.select().from("Products").where("Price").between(10, 20).or("CategoryID").notIn(1, 2, 3);
         assertEquals(expected, sql.getQuery());
     }
 
     @Test
-    void testSelectFromAsWhereAnd() {
+    void selectFromAsWhereAnd() {
         String expected = "SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName = 'Around the Horn' AND c.CustomerID = o.CustomerID";
         AbstractQuery sql = SQLBuilder.select("o.OrderID", "o.OrderDate", "c.CustomerName")
                 .from("Customers").as("c").comma("Orders").as("o")
@@ -371,7 +371,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromJoinOn() {
+    void selectFromJoinOn() {
         String expected = "SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate FROM Orders JOIN Customers ON Customers.CustomerID = Orders.CustomerID AND Customers.CustomerName > 'Joerg'";
         AbstractQuery sql = SQLBuilder.select("Orders.OrderID", "Customers.CustomerName", "Orders.OrderDate")
                 .from("Orders").join("Customers").on("Customers.CustomerID").eqCol("Orders.CustomerID")
@@ -380,7 +380,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromJoinOnWithAliases() {
+    void selectFromJoinOnWithAliases() {
         String expected = "SELECT o.OrderID, c.CustomerName, o.OrderDate FROM Orders o JOIN Customers c ON o.CustomerID = c.CustomerID AND c.CustomerName <= 'Joerg'";
         AbstractQuery sql = SQLBuilder.select("o.OrderID", "c.CustomerName", "o.OrderDate")
                 .from("Orders", "o").join("Customers", "c")
@@ -397,7 +397,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromLeftJoinOnOrderBy() {
+    void selectFromLeftJoinOnOrderBy() {
         String expected = "SELECT Customers.CustomerName, Orders.OrderID FROM Customers LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID ORDER BY Customers.CustomerName";
         AbstractQuery sql = SQLBuilder.select("Customers.CustomerName", "Orders.OrderID")
                 .from("Customers").leftJoin("Orders")
@@ -407,7 +407,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromRightJoinOnOrderBy() {
+    void selectFromRightJoinOnOrderBy() {
         String expected = "SELECT Orders.OrderID, Employees.LastName, Employees.FirstName FROM Orders RIGHT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID ORDER BY Orders.OrderID";
         AbstractQuery sql = SQLBuilder.select("Orders.OrderID", "Employees.LastName", "Employees.FirstName")
                 .from("Orders").rightJoin("Employees").on("Orders.EmployeeID").eqCol("Employees.EmployeeID")
@@ -416,7 +416,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromFullOuterJoinOnOrderBy() {
+    void selectFromFullOuterJoinOnOrderBy() {
         String expected = "SELECT Customers.CustomerName, Orders.OrderID FROM Customers FULL JOIN Orders ON Customers.CustomerID = Orders.CustomerID ORDER BY Customers.CustomerName";
         AbstractQuery sql = SQLBuilder.select("Customers.CustomerName", "Orders.OrderID")
                 .from("Customers").fullJoin("Orders")
@@ -426,7 +426,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectAsAsFromWhereAndOrderBy() {
+    void selectAsAsFromWhereAndOrderBy() {
         String expected = "SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City FROM Customers A, Customers B WHERE A.CustomerID <> B.CustomerID AND A.City = B.City ORDER BY A.City";
         AbstractQuery sql = SQLBuilder.select("A.CustomerName").as("CustomerName1")
                 .comma("B.CustomerName").as("CustomerName2")
@@ -439,7 +439,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromUnionSelectFromOrderBy() {
+    void selectFromUnionSelectFromOrderBy() {
         String expected = "SELECT City FROM Customers UNION SELECT City FROM Suppliers ORDER BY City";
         AbstractQuery sql = SQLBuilder.select("City").from("Customers").union().select("City").from("Suppliers").orderBy("City");
         assertEquals(expected, sql.getQuery());
@@ -468,7 +468,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectCountFromGroupByOrderByCountDesc() {
+    void selectCountFromGroupByOrderByCountDesc() {
         String expected = "SELECT COUNT (CustomerID), Country FROM Customers GROUP BY Country ORDER BY COUNT (CustomerID) DESC";
         AbstractQuery sql = SQLBuilder.selectCount("CustomerID").comma("Country").from("Customers").groupBy("Country").orderByCount("CustomerID").desc();
         assertEquals(expected, sql.getQuery());
@@ -491,13 +491,13 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectCountAsFromJoinOnGroupByHavingCount() {
+    void selectCountAsFromJoinOnGroupByHavingCount() {
         String expected = "SELECT E.LastName, COUNT(O.OrderID) AS NumberOfOrders FROM (Orders INNER JOIN Employees ON O.EmployeeID = E.EmployeeID) GROUP BY LastName HAVING COUNT(O.OrderID) > 10";
         // TODO
     }
 
     @Test
-    void testSelectFromWhereInSelectDistinctFrom() {
+    void selectFromWhereInSelectDistinctFrom() {
         String expected = "SELECT * FROM users WHERE id IN (SELECT DISTINCT user_id FROM questions)";
         AbstractQuery aq = SQLBuilder.select().from("users")
                 .where("id").in(SQLBuilder.selectDistinct("user_id").from("questions"));
@@ -505,7 +505,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectFromWhereExistsSelectFromWhereAnd() {
+    void selectFromWhereExistsSelectFromWhereAnd() {
         String expected = "SELECT SupplierName FROM Suppliers WHERE EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price >= 20)";
         AbstractQuery aq = SQLBuilder.select("SupplierName").from("Suppliers")
                 .where().exists(
@@ -533,7 +533,7 @@ public class SQLBuilderTest {
     }
 
     @Test
-    void testSelectedSum() {
+    void selectedSum() {
         String expected = "SELECT SUM (Quantity) FROM OrderDetails";
         AbstractQuery aq = SQLBuilder.selectSum("Quantity").from("OrderDetails");
         assertEquals(expected, aq.getQuery());
