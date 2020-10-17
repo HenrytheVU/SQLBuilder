@@ -2,13 +2,8 @@ package sql;
 
 import java.util.List;
 
-public class NotEqual extends AbstractQuery {
+public class NotEqual extends AbstractOperator {
     public NotEqual(StringBuilder query, List<Object> params) {
         super(query, params);
-    }
-
-    public And and(String col) {
-        query.append(" AND ").append(col);
-        return new And(query, params);
     }
 }

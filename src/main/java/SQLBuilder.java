@@ -50,6 +50,20 @@ public class SQLBuilder {
         return new Select(query, params);
     }
 
+    public static Select selectAvg(String col) {
+        final StringBuilder query = new StringBuilder();
+        final List<Object> params = new ArrayList<>();
+        query.append("SELECT AVG (").append(col).append(")");
+        return new Select(query, params);
+    }
+
+    public static Select selectSum(String col) {
+        final StringBuilder query = new StringBuilder();
+        final List<Object> params = new ArrayList<>();
+        query.append("SELECT SUM (").append(col).append(")");
+        return new Select(query, params);
+    }
+
     public static Select selectCountDistinct(String col) {
         final StringBuilder query = new StringBuilder();
         final List<Object> params = new ArrayList<>();

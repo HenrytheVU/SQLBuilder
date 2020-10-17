@@ -14,7 +14,7 @@ public class To extends AbstractQuery {
         return new Where(query, params);
     }
 
-    public Set set(@NotNull final String col, @NotNull final Object value) {
+    public Set set(@NotNull final String col, final Object value) {
         query.append(" SET ").append(col).append(" = ?");
         params.add(value);
         return new Set(query, params);

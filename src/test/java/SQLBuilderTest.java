@@ -329,51 +329,234 @@ public class SQLBuilderTest {
     void testSelectFromAsWhereAnd() {
         String expected = "SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName = 'Around the Horn' AND c.CustomerID = o.CustomerID";
         AbstractQuery sql = SQLBuilder.select("o.OrderID", "o.OrderDate", "c.CustomerName")
-                .from("Customers").as("c")
-                .from("Orders").as("o")
+                .from("Customers").as("c").comma("Orders").as("o")
                 .where("c.CustomerName").eq("Around the Horn")
                 .and("c.CustomerID").eqCol("o.CustomerID");
         assertEquals(expected, sql.getQuery());
 
         String expected1 = "SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName = 'Around the Horn' AND c.CustomerID <> o.CustomerID";
         AbstractQuery sql1 = SQLBuilder.select("o.OrderID", "o.OrderDate", "c.CustomerName")
-                .from("Customers").as("c")
-                .from("Orders").as("o")
+                .from("Customers").as("c").comma("Orders").as("o")
                 .where("c.CustomerName").eq("Around the Horn")
                 .and("c.CustomerID").neCol("o.CustomerID");
         assertEquals(expected1, sql1.getQuery());
 
         String expected2 = "SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName = 'Around the Horn' AND c.CustomerID > o.CustomerID";
         AbstractQuery sql2 = SQLBuilder.select("o.OrderID", "o.OrderDate", "c.CustomerName")
-                .from("Customers").as("c")
-                .from("Orders").as("o")
+                .from("Customers").as("c").comma("Orders").as("o")
                 .where("c.CustomerName").eq("Around the Horn")
                 .and("c.CustomerID").gtCol("o.CustomerID");
         assertEquals(expected2, sql2.getQuery());
 
         String expected3 = "SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName = 'Around the Horn' AND c.CustomerID < o.CustomerID";
         AbstractQuery sql3 = SQLBuilder.select("o.OrderID", "o.OrderDate", "c.CustomerName")
-                .from("Customers").as("c")
-                .from("Orders").as("o")
+                .from("Customers").as("c").comma("Orders").as("o")
                 .where("c.CustomerName").eq("Around the Horn")
                 .and("c.CustomerID").ltCol("o.CustomerID");
         assertEquals(expected3, sql3.getQuery());
 
         String expected4 = "SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName = 'Around the Horn' AND c.CustomerID >= o.CustomerID";
         AbstractQuery sql4 = SQLBuilder.select("o.OrderID", "o.OrderDate", "c.CustomerName")
-                .from("Customers").as("c")
-                .from("Orders").as("o")
+                .from("Customers").as("c").comma("Orders").as("o")
                 .where("c.CustomerName").eq("Around the Horn")
                 .and("c.CustomerID").geCol("o.CustomerID");
         assertEquals(expected4, sql4.getQuery());
 
         String expected5 = "SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName = 'Around the Horn' AND c.CustomerID <= o.CustomerID";
         AbstractQuery sql5 = SQLBuilder.select("o.OrderID", "o.OrderDate", "c.CustomerName")
-                .from("Customers").as("c")
-                .from("Orders").as("o")
+                .from("Customers").as("c").comma("Orders").as("o")
                 .where("c.CustomerName").eq("Around the Horn")
                 .and("c.CustomerID").leCol("o.CustomerID");
         assertEquals(expected5, sql5.getQuery());
+    }
+
+    @Test
+    void testSelectFromJoinOn() {
+        String expected = "SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate FROM Orders JOIN Customers ON Customers.CustomerID = Orders.CustomerID AND Customers.CustomerName > 'Joerg'";
+        AbstractQuery sql = SQLBuilder.select("Orders.OrderID", "Customers.CustomerName", "Orders.OrderDate")
+                .from("Orders").join("Customers").on("Customers.CustomerID").eqCol("Orders.CustomerID")
+                .and("Customers.CustomerName").gt("Joerg");
+        assertEquals(expected, sql.getQuery());
+    }
+
+    @Test
+    void testSelectFromJoinOnWithAliases() {
+        String expected = "SELECT o.OrderID, c.CustomerName, o.OrderDate FROM Orders o JOIN Customers c ON o.CustomerID = c.CustomerID AND c.CustomerName <= 'Joerg'";
+        AbstractQuery sql = SQLBuilder.select("o.OrderID", "c.CustomerName", "o.OrderDate")
+                .from("Orders", "o").join("Customers", "c")
+                .on("o.CustomerID").eqCol("c.CustomerID")
+                .and("c.CustomerName").le("Joerg");
+        assertEquals(expected, sql.getQuery());
+
+        String expected1 = "SELECT o.OrderID, c.CustomerName, o.OrderDate FROM Orders AS o JOIN Customers AS c ON o.CustomerID = c.CustomerID AND c.CustomerName >= 'Joerg'";
+        AbstractQuery sql1 = SQLBuilder.select("o.OrderID", "c.CustomerName", "o.OrderDate")
+                .from("Orders").as("o").join("Customers").as("c")
+                .on("o.CustomerID").eqCol("c.CustomerID")
+                .and("c.CustomerName").ge("Joerg");
+        assertEquals(expected1, sql1.getQuery());
+    }
+
+    @Test
+    void testSelectFromLeftJoinOnOrderBy() {
+        String expected = "SELECT Customers.CustomerName, Orders.OrderID FROM Customers LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID ORDER BY Customers.CustomerName";
+        AbstractQuery sql = SQLBuilder.select("Customers.CustomerName", "Orders.OrderID")
+                .from("Customers").leftJoin("Orders")
+                .on("Customers.CustomerID").eqCol("Orders.CustomerID")
+                .orderBy("Customers.CustomerName");
+        assertEquals(expected, sql.getQuery());
+    }
+
+    @Test
+    void testSelectFromRightJoinOnOrderBy() {
+        String expected = "SELECT Orders.OrderID, Employees.LastName, Employees.FirstName FROM Orders RIGHT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID ORDER BY Orders.OrderID";
+        AbstractQuery sql = SQLBuilder.select("Orders.OrderID", "Employees.LastName", "Employees.FirstName")
+                .from("Orders").rightJoin("Employees").on("Orders.EmployeeID").eqCol("Employees.EmployeeID")
+                .orderBy("Orders.OrderID");
+        assertEquals(expected, sql.getQuery());
+    }
+
+    @Test
+    void testSelectFromFullOuterJoinOnOrderBy() {
+        String expected = "SELECT Customers.CustomerName, Orders.OrderID FROM Customers FULL JOIN Orders ON Customers.CustomerID = Orders.CustomerID ORDER BY Customers.CustomerName";
+        AbstractQuery sql = SQLBuilder.select("Customers.CustomerName", "Orders.OrderID")
+                .from("Customers").fullJoin("Orders")
+                .on("Customers.CustomerID").eqCol("Orders.CustomerID")
+                .orderBy("Customers.CustomerName");
+        assertEquals(expected, sql.getQuery());
+    }
+
+    @Test
+    void testSelectAsAsFromWhereAndOrderBy() {
+        String expected = "SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City FROM Customers A, Customers B WHERE A.CustomerID <> B.CustomerID AND A.City = B.City ORDER BY A.City";
+        AbstractQuery sql = SQLBuilder.select("A.CustomerName").as("CustomerName1")
+                .comma("B.CustomerName").as("CustomerName2")
+                .comma("A.City")
+                .from("Customers A").comma("Customers B")
+                .where("A.CustomerID").neCol("B.CustomerID")
+                .and("A.City").eqCol("B.City")
+                .orderBy("A.City");
+        assertEquals(expected, sql.getQuery());
+    }
+
+    @Test
+    void testSelectFromUnionSelectFromOrderBy() {
+        String expected = "SELECT City FROM Customers UNION SELECT City FROM Suppliers ORDER BY City";
+        AbstractQuery sql = SQLBuilder.select("City").from("Customers").union().select("City").from("Suppliers").orderBy("City");
+        assertEquals(expected, sql.getQuery());
+
+        String expected1 = "SELECT City FROM Customers UNION ALL SELECT City FROM Suppliers ORDER BY City";
+        AbstractQuery sql1 = SQLBuilder.select("City").from("Customers").unionAll().select("City").from("Suppliers").orderBy("City");
+        assertEquals(expected1, sql1.getQuery());
+
+        String expected2 = "SELECT City, Country FROM Customers WHERE Country = 'Germany' UNION SELECT City, Country FROM Suppliers WHERE Country = 'Germany' ORDER BY City";
+        AbstractQuery sql2 = SQLBuilder.select("City", "Country").from("Customers")
+                .where("Country").eq("Germany")
+                .union()
+                .select("City", "Country").from("Suppliers")
+                .where("Country").eq("Germany")
+                .orderBy("City");
+        assertEquals(expected2, sql2.getQuery());
+
+        String expected3 = "SELECT City, Country FROM Customers WHERE Country = 'Germany' UNION ALL SELECT City, Country FROM Suppliers WHERE Country = 'Germany' ORDER BY City";
+        AbstractQuery sql3 = SQLBuilder.select("City", "Country").from("Customers")
+                .where("Country").eq("Germany")
+                .unionAll()
+                .select("City", "Country").from("Suppliers")
+                .where("Country").eq("Germany")
+                .orderBy("City");
+        assertEquals(expected3, sql3.getQuery());
+    }
+
+    @Test
+    void testSelectCountFromGroupByOrderByCountDesc() {
+        String expected = "SELECT COUNT (CustomerID), Country FROM Customers GROUP BY Country ORDER BY COUNT (CustomerID) DESC";
+        AbstractQuery sql = SQLBuilder.selectCount("CustomerID").comma("Country").from("Customers").groupBy("Country").orderByCount("CustomerID").desc();
+        assertEquals(expected, sql.getQuery());
+
+        String expected1 = "SELECT Shippers.ShipperName, COUNT (Orders.OrderID) AS NumberOfOrders FROM Orders LEFT JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID GROUP BY ShipperName";
+        AbstractQuery sql1 = SQLBuilder.select("Shippers.ShipperName").count("Orders.OrderID").as("NumberOfOrders")
+                .from("Orders")
+                .leftJoin("Shippers").on("Orders.ShipperID").eqCol("Shippers.ShipperID")
+                .groupBy("ShipperName");
+        assertEquals(expected1, sql1.getQuery());
+    }
+
+    @Test
+    void testSelectCountFromGroupByHavingCountOrderByCountDesc() {
+        String expected = "SELECT COUNT (CustomerID), Country FROM Customers GROUP BY Country HAVING COUNT (CustomerID) > 5 ORDER BY COUNT (CustomerID) DESC";
+        AbstractQuery sql = SQLBuilder.selectCount("CustomerID").comma("Country").from("Customers").groupBy("Country").havingCount("CustomerID").gt(5).orderByCount("CustomerID").desc();
+        assertEquals(expected, sql.getQuery());
+        AbstractQuery sql1 = SQLBuilder.selectCount("CustomerID").comma("Country").from("Customers").groupBy("Country").havingCount("CustomerID").gt(5).orderBy().count("CustomerID").desc();
+        assertEquals(expected, sql1.getQuery());
+    }
+
+    @Test
+    void testSelectCountAsFromJoinOnGroupByHavingCount() {
+        String expected = "SELECT E.LastName, COUNT(O.OrderID) AS NumberOfOrders FROM (Orders INNER JOIN Employees ON O.EmployeeID = E.EmployeeID) GROUP BY LastName HAVING COUNT(O.OrderID) > 10";
+        // TODO
+    }
+
+    @Test
+    void testSelectFromWhereInSelectDistinctFrom() {
+        String expected = "SELECT * FROM users WHERE id IN (SELECT DISTINCT user_id FROM questions)";
+        AbstractQuery aq = SQLBuilder.select().from("users")
+                .where("id").in(SQLBuilder.selectDistinct("user_id").from("questions"));
+        assertEquals(expected, aq.getQuery());
+    }
+
+    @Test
+    void testSelectFromWhereExistsSelectFromWhereAnd() {
+        String expected = "SELECT SupplierName FROM Suppliers WHERE EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price >= 20)";
+        AbstractQuery aq = SQLBuilder.select("SupplierName").from("Suppliers")
+                .where().exists(
+                        SQLBuilder.select("ProductName").from("Products")
+                                .where("Products.SupplierID").eqCol("Suppliers.supplierID")
+                                .and("Price").ge(20)
+                );
+        assertEquals(expected, aq.getQuery());
+
+        String expected1 = "SELECT SupplierName FROM Suppliers WHERE NOT EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price < 20)";
+        AbstractQuery aq1 = SQLBuilder.select("SupplierName").from("Suppliers")
+                .where().not().exists(
+                        SQLBuilder.select("ProductName").from("Products")
+                                .where("Products.SupplierID").eqCol("Suppliers.supplierID")
+                                .and("Price").lt(20)
+                );
+        assertEquals(expected1, aq1.getQuery());
+    }
+
+    @Test
+    void selectAvgFrom() {
+        String expected = "SELECT AVG (Price) FROM Products";
+        AbstractQuery aq = SQLBuilder.selectAvg("Price").from("Products");
+        assertEquals(expected, aq.getQuery());
+    }
+
+    @Test
+    void testSelectedSum() {
+        String expected = "SELECT SUM (Quantity) FROM OrderDetails";
+        AbstractQuery aq = SQLBuilder.selectSum("Quantity").from("OrderDetails");
+        assertEquals(expected, aq.getQuery());
+    }
+
+    @Test
+    void selectFromWhereAnySelectFromWhere() {
+        String expected = "SELECT ProductName FROM Products WHERE ProductID = ANY (SELECT ProductID FROM OrderDetails WHERE Quantity = 10)";
+        AbstractQuery aq = SQLBuilder.select("ProductName").from("Products")
+                .where("ProductID").eqAny(
+                        SQLBuilder.select("ProductID").from("OrderDetails").where("Quantity").eq(10)
+                );
+        assertEquals(expected, aq.getQuery());
+    }
+
+    @Test
+    void selectFromWhereAllSelectFromWhere() {
+        String expected = "SELECT ProductName FROM Products WHERE ProductID = ALL (SELECT ProductID FROM OrderDetails WHERE Quantity = 10)";
+        AbstractQuery aq = SQLBuilder.select("ProductName").from("Products")
+                .where("ProductID").eqAll(
+                        SQLBuilder.select("ProductID").from("OrderDetails").where("Quantity").eq(10)
+                );
+        assertEquals(expected, aq.getQuery());
     }
 
     private static boolean deepEqual(Object[] expected, Object[] actual) {

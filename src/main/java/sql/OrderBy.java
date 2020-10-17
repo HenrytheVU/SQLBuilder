@@ -26,4 +26,9 @@ public class OrderBy extends AbstractQuery {
         query.append(" DESC");
         return new Desc(query, params);
     }
+
+    public Count count(String col) {
+        query.append(" COUNT (").append(col).append(")");
+        return new Count(query, params);
+    }
 }

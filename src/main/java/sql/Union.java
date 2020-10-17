@@ -12,7 +12,7 @@ public class Union extends AbstractQuery {
     }
 
     public Select select(@NotNull final String... cols) {
-        query.append("SELECT ");
+        query.append(" SELECT ");
         if (cols.length > 0) {
             String colsJoining = Stream.of(cols).collect(Collectors.joining(", "));
             query.append(colsJoining);
