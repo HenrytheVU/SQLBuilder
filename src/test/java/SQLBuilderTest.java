@@ -559,6 +559,13 @@ public class SQLBuilderTest {
         assertEquals(expected, aq.getQuery());
     }
 
+    @Test
+    void selectFromLimit() {
+        String expected = "SELECT * FROM Customers LIMIT 3";
+        AbstractQuery aq  = SQLBuilder.select().from("Customers").limit(3);
+        assertEquals(expected, aq.getQuery());
+    }
+
     private static boolean deepEqual(Object[] expected, Object[] actual) {
         if (expected.length != actual.length) {
             return false;

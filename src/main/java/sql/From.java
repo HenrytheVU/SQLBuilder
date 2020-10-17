@@ -108,6 +108,12 @@ public class From extends AbstractQuery {
         return new As(query, params);
     }
 
+    public Limit limit(Integer val) {
+        query.append(" LIMIT ?");
+        params.add(val);
+        return new Limit(query, params);
+    }
+
     public Comma comma(String table) {
         query.append(", ").append(table);
         return new Comma(query, params);
