@@ -25,6 +25,9 @@ public abstract class AbstractQuery {
     }
 
     public String getQuery() {
+        if (params.size() == 0) {
+            return query.toString();
+        }
         AtomicInteger counter = new AtomicInteger();
         return Stream.of(query.toString().split(" ")).map(s -> {
             if (s.contains("?")) {

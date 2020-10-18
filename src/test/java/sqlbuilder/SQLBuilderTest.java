@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static sqlbuilder.SQLBuilder.*;
 
 public class SQLBuilderTest {
@@ -502,8 +501,11 @@ public class SQLBuilderTest {
 
     @Test
     void selectCountAsFromJoinOnGroupByHavingCount() {
-        String expected = "SELECT E.LastName, COUNT(O.OrderID) AS NumberOfOrders FROM (Orders INNER JOIN Employees ON O.EmployeeID = E.EmployeeID) GROUP BY LastName HAVING COUNT(O.OrderID) > 10";
-        // TODO
+        String expected = "SELECT E.LastName, COUNT (O.OrderID) AS NumberOfOrders FROM (Orders JOIN Employees ON O.EmployeeID = E.EmployeeID) GROUP BY LastName HAVING COUNT (O.OrderID) > 10";
+        AbstractQuery aq = select("E.LastName").comma().count("O.OrderID").as("NumberOfOrders")
+                .from("(Orders").join("Employees").on("O.EmployeeID").eqCol("E.EmployeeID)")
+                .groupBy("LastName").havingCount("O.OrderID").gt(10);
+        assertEquals(expected, aq.getQuery());
     }
 
     @Test
@@ -574,6 +576,46 @@ public class SQLBuilderTest {
         String expected = "SELECT * FROM Customers LIMIT 3";
         AbstractQuery aq = select().from("Customers").limit(3);
         assertEquals(expected, aq.getQuery());
+    }
+
+    @Test
+    void insertIntoValuesWithPlaceHolders() {
+        String expected = "INSERT INTO books (title, author, date) VALUES (?, ?, ?)";
+        AbstractQuery aq = insertInto("books", "title", "author", "date").values();
+        assertEquals(expected, aq.getQueryWithPlaceHolders());
+
+        AbstractQuery aq1 = insertInto("books", "title", "author", "date").valuesAsPlaceHolders();
+        assertEquals(expected, aq1.getQueryWithPlaceHolders());
+    }
+
+    @Test
+    void insertIntoColumnsWithPlaceHolders() {
+        String expected = "INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country) VALUES (?, ?, ?, ?, ?, ?)";
+        AbstractQuery aq = insertInto("Customers").columns("CustomerName", "ContactName", "Address", "City", "PostalCode", "Country").values();
+        assertEquals(expected, aq.getQueryWithPlaceHolders());
+        AbstractQuery aqValuesAsPlaceHolders = insertInto("Customers").columns("CustomerName", "ContactName", "Address", "City", "PostalCode", "Country").valuesAsPlaceHolders();
+        assertEquals(expected, aqValuesAsPlaceHolders.getQueryWithPlaceHolders());
+
+        String expected1 = "INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country) VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', 4006, 'Norway')";
+        AbstractQuery aq1 = insertInto("Customers").columns("CustomerName", "ContactName", "Address", "City", "PostalCode", "Country").values("Cardinal", "Tom B. Erichsen", "Skagen 21", "Stavanger", 4006, "Norway");
+
+        assertEquals(expected1, aq1.getQuery());
+
+        String expected2 = "INSERT INTO Customers VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', 4006, 'Norway')";
+        AbstractQuery aq2 = insertInto("Customers").values("Cardinal", "Tom B. Erichsen", "Skagen 21", "Stavanger", 4006, "Norway");
+        assertEquals(expected2, aq2.getQuery());
+
+        String expected3 = "INSERT INTO Customers VALUES (?)";
+        AbstractQuery aq3 = insertInto("Customers").valuesWithNumberOfPlaceHolders(1);
+        assertEquals(expected3, aq3.getQuery());
+
+        String expected4 = "INSERT INTO Customers VALUES (?, ?, ?, ?, ?, ?)";
+        AbstractQuery aq4 = insertInto("Customers").valuesWithNumberOfPlaceHolders(6);
+        assertEquals(expected4, aq4.getQuery());
+
+        assertThrows(BadSQLSyntaxException.class, () -> insertInto("Customers").valuesWithNumberOfPlaceHolders(0));
+        assertThrows(BadSQLSyntaxException.class, () -> insertInto("Customers").valuesWithNumberOfPlaceHolders(-11));
+
     }
 
     private static boolean deepEqual(Object[] expected, Object[] actual) {

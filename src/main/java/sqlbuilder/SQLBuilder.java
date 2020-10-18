@@ -79,6 +79,13 @@ public class SQLBuilder {
         return new InsertInto(query, params);
     }
 
+    public static InsertInto insertInto(String table) {
+        final StringBuilder query = new StringBuilder();
+        final List<Object> params = new ArrayList<>();
+        query.append("INSERT INTO ").append(table);
+        return new InsertInto(query, params);
+    }
+
     public static DeleteFrom deleteFrom(String table) {
         final StringBuilder query = new StringBuilder();
         final List<Object> params = new ArrayList<>();
