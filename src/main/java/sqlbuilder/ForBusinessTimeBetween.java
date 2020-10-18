@@ -8,9 +8,9 @@ public class ForBusinessTimeBetween extends AbstractQuery {
         super(query, params);
     }
 
-    public AbstractCondition and(LocalDate endExcl) {
+    public ForBusinessTimeBetweenAnd and(LocalDate endExcl) {
         query.append(" AND ?");
         params.add(endExcl.toString());
-        return new AbstractCondition(query, params);
+        return new ForBusinessTimeBetweenAnd(query, params);
     }
 }

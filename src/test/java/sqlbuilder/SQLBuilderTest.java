@@ -271,6 +271,9 @@ public class SQLBuilderTest {
                 .to(LocalDate.of(2008, 8, 15))
                 .where("policy_id").eq("A123");
         assertEquals(expected, sql.getQuery());
+
+        String expectedWithPlaceHolders = "DELETE FROM policy_info FOR PORTION OF BUSINESS_TIME FROM ? TO ? WHERE policy_id = ?";
+        assertEquals(expectedWithPlaceHolders, sql.getQueryWithPlaceHolders());
     }
 
     @Test
@@ -278,6 +281,9 @@ public class SQLBuilderTest {
         String expected = "DELETE FROM Customers WHERE CustomerName = 'Alfreds Futterkiste'";
         AbstractQuery sql = deleteFrom("Customers").where("CustomerName").eq("Alfreds Futterkiste");
         assertEquals(expected, sql.getQuery());
+
+        String expectedWithPlaceHolders = "DELETE FROM Customers WHERE CustomerName = ?";
+        assertEquals(expectedWithPlaceHolders, sql.getQueryWithPlaceHolders());
     }
 
     @Test
@@ -315,6 +321,9 @@ public class SQLBuilderTest {
         String expected = "SELECT * FROM Customers WHERE Country NOT IN ('Germany', 'France', 'UK')";
         AbstractQuery sql = select().from("Customers").where("Country").notIn("Germany", "France", "UK");
         assertEquals(expected, sql.getQuery());
+
+        String expectedWithPlaceHolders = "SELECT * FROM Customers WHERE Country NOT IN (?, ?, ?)";
+        assertEquals(expectedWithPlaceHolders, sql.getQueryWithPlaceHolders());
 
         AbstractQuery sql1 = select().from("Customers").where("Country").notIn(Arrays.asList("Germany", "France", "UK"));
         assertEquals(expected, sql1.getQuery());

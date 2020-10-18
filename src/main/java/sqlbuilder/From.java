@@ -16,6 +16,11 @@ public class From extends AbstractQuery {
         return new ForBusinessTimeAsOf(query, params);
     }
 
+    public ForBusinessTimeAsOfCurrentDate forBusinessTimeAsOfCurrentDate() {
+        query.append(" FOR BUSINESS_TIME AS OF CURRENT DATE");
+        return new ForBusinessTimeAsOfCurrentDate(query, params);
+    }
+
     public ForBusinessTimeFrom forBusinessTimeFrom(LocalDate startIncl) {
         query.append(" FOR BUSINESS_TIME FROM ?");
         params.add(startIncl.toString());
