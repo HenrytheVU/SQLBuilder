@@ -1,2 +1,2 @@
-# SQLBuilder
-A Java SQLBuilder with fluent API for writing type-safe SQL queries
+# sqlbuilder.SQLBuilder
+A Java sqlbuilder.SQLBuilder with fluent API for writing type-safe SQL queries
