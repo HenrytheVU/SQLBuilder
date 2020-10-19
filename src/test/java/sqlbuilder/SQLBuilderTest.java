@@ -595,6 +595,8 @@ public class SQLBuilderTest {
 
         AbstractQuery aq1 = insertInto("books", "title", "author", "date").valuesAsPlaceHolders();
         assertEquals(expected, aq1.getQueryWithPlaceHolders());
+
+        assertThrows(BadSQLSyntaxException.class, () -> insertInto("books").valuesAsPlaceHolders());
     }
 
     @Test
@@ -624,7 +626,6 @@ public class SQLBuilderTest {
 
         assertThrows(BadSQLSyntaxException.class, () -> insertInto("Customers").valuesWithNumberOfPlaceHolders(0));
         assertThrows(BadSQLSyntaxException.class, () -> insertInto("Customers").valuesWithNumberOfPlaceHolders(-11));
-
     }
 
     private static boolean deepEqual(Object[] expected, Object[] actual) {

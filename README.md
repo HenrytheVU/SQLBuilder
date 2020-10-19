@@ -14,7 +14,9 @@ assertEquals(expectedWithPlaceHolders, sql.getQueryWithPlaceHolders());
 #### INSERT INTO
 ````java
 String expected = "INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode) VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', 4006)";
-AbstractQuery sql = insertInto("Customers").columns("CustomerName", "ContactName", "Address", "City", "PostalCode").values("Cardinal", "Tom B. Erichsen", "Skagen 21", "Stavanger", 4006,);
+AbstractQuery sql = insertInto("Customers")
+    .columns("CustomerName", "ContactName", "Address", "City", "PostalCode")
+    .values("Cardinal", "Tom B. Erichsen", "Skagen 21", "Stavanger", 4006);
 assertEquals(expected, sql.getQuery());
 
 String expectedWithPlaceHolders = "INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode) VALUES (? ,? ,? ,? ,?)";
@@ -37,7 +39,8 @@ assertEquals(expectedWithPlaceHolders, sql.toString());
 #### DELETE
 ````java
 String expected = "DELETE FROM Customers WHERE CustomerName = 'Alfreds Futterkiste'";
-AbstractQuery sql = deleteFrom("Customers").where("CustomerName").eq("Alfreds Futterkiste");
+AbstractQuery sql = deleteFrom("Customers")
+    .where("CustomerName").eq("Alfreds Futterkiste");
 assertEquals(expected, sql.getQuery());
 
 String expectedWithPlaceHolders = "DELETE FROM Customers WHERE CustomerName = ?";

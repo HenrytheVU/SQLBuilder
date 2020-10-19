@@ -29,7 +29,7 @@ public class InsertInto extends AbstractQuery {
 
     public Values valuesWithNumberOfPlaceHolders(Integer noPlaceHolders) {
         if (noPlaceHolders <= 0) {
-            throw new BadSQLSyntaxException("Number of placeholders must be >= 0!");
+            throw new BadSQLSyntaxException("Number of placeholders must be > 0!");
         }
         query.append(" VALUES (");
         for (int i = 1; i <= noPlaceHolders; i++) {
@@ -45,6 +45,7 @@ public class InsertInto extends AbstractQuery {
     public Values valuesAsPlaceHolders() {
         query.append(" VALUES (");
         int noCols = getNoColsToBeInserted(query.toString());
+
         for (int i = 0; i < noCols; i++) {
             if (i == noCols - 1) {
                 query.append("?)");
@@ -62,6 +63,9 @@ public class InsertInto extends AbstractQuery {
     }
 
     private Integer getNoColsToBeInserted(String insertIntoQuery) {
+        if (!insertIntoQuery.contains(")")) {
+            throw new BadSQLSyntaxException("Number of columns must be > 0! Please specify at least a column name after INSERT INTO table_name (column1, column2...)");
+        }
         String colsStrippedLeft = insertIntoQuery.split("\\(")[1];
         String colsStripped = colsStrippedLeft.split("\\)")[0];
         final int noCols = colsStripped.split(", ").length;
