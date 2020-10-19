@@ -538,7 +538,7 @@ public class SQLBuilderTest {
 
         String expected1 = "SELECT SupplierName FROM Suppliers WHERE NOT EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price < 20)";
         AbstractQuery aq1 = select("SupplierName").from("Suppliers")
-                .where().not().exists(
+                .where().notExists(
                         select("ProductName").from("Products")
                                 .where("Products.SupplierID").eqCol("Suppliers.supplierID")
                                 .and("Price").lt(20)
@@ -626,6 +626,14 @@ public class SQLBuilderTest {
 
         assertThrows(BadSQLSyntaxException.class, () -> insertInto("Customers").valuesWithNumberOfPlaceHolders(0));
         assertThrows(BadSQLSyntaxException.class, () -> insertInto("Customers").valuesWithNumberOfPlaceHolders(-11));
+    }
+
+    @Test
+    void selectDistinctFromWhereContainsAnd() {
+        String expected = "SELECT DISTINCT * FROM Persons WHERE FirstName LIKE '%Henry%' AND LastName = 'Vu'";
+        AbstractQuery aq = selectDistinct().from("Persons").where("FirstName").contains("Henry").and("LastName").eq("Vu");
+        assertEquals(expected, aq.getQuery());
+
     }
 
     private static boolean deepEqual(Object[] expected, Object[] actual) {

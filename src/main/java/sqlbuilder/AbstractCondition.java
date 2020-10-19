@@ -123,17 +123,17 @@ public class AbstractCondition extends AbstractQuery {
         return new AbstractOperator(query, params);
     }
 
-    public IsNull isNull() {
+    public AbstractOperator isNull() {
         query.append(" IS NULL");
-        return new IsNull(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public IsNotNull isNotNull() {
+    public AbstractOperator isNotNull() {
         query.append(" IS NOT NULL");
-        return new IsNotNull(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public In in(final Object... filters) {
+    public AbstractOperator in(final Object... filters) {
         query.append(" IN (");
         for (int i = 0; i < filters.length; i++) {
             if (i == filters.length - 1) {
@@ -143,10 +143,10 @@ public class AbstractCondition extends AbstractQuery {
             }
         }
         Collections.addAll(params, filters);
-        return new In(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public In in(final List<Object> filters) {
+    public AbstractOperator in(final List<Object> filters) {
         query.append(" IN (");
         for (int i = 0; i < filters.size(); i++) {
             if (i == filters.size() - 1) {
@@ -156,10 +156,10 @@ public class AbstractCondition extends AbstractQuery {
             }
         }
         params.addAll(filters);
-        return new In(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public In notIn(final Object... filters) {
+    public AbstractOperator notIn(final Object... filters) {
         query.append(" NOT IN (");
         for (int i = 0; i < filters.length; i++) {
             if (i == filters.length - 1) {
@@ -169,10 +169,10 @@ public class AbstractCondition extends AbstractQuery {
             }
         }
         Collections.addAll(params, filters);
-        return new In(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public In notIn(final List<Object> filters) {
+    public AbstractOperator notIn(final List<Object> filters) {
         query.append(" NOT IN (");
         for (int i = 0; i < filters.size(); i++) {
             if (i == filters.size() - 1) {
@@ -182,42 +182,42 @@ public class AbstractCondition extends AbstractQuery {
             }
         }
         params.addAll(filters);
-        return new In(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public In in(AbstractQuery subQuery) {
+    public AbstractOperator in(AbstractQuery subQuery) {
         query.append(" IN (").append(subQuery.query).append(")");
-        return new In(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public Like like(Object pattern) {
+    public AbstractOperator like(Object pattern) {
         query.append(" LIKE ?");
         params.add(pattern);
-        return new Like(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public Like startsWith(Object pattern) {
+    public AbstractOperator startsWith(Object pattern) {
         query.append(" LIKE ?");
         params.add(pattern + "%");
-        return new Like(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public Like endsWith(Object pattern) {
+    public AbstractOperator endsWith(Object pattern) {
         query.append(" LIKE ?");
         params.add("%" + pattern);
-        return new Like(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public Like contains(Object pattern) {
+    public AbstractOperator contains(Object pattern) {
         query.append(" LIKE ?");
         params.add("%" + pattern + "%");
-        return new Like(query, params);
+        return new AbstractOperator(query, params);
     }
 
-    public Between between(Object value1, Object value2) {
+    public AbstractOperator between(Object value1, Object value2) {
         query.append(" BETWEEN ? AND ?");
         params.addAll(Arrays.asList(value1, value2));
-        return new Between(query, params);
+        return new AbstractOperator(query, params);
     }
 
     public Union union() {
@@ -235,13 +235,14 @@ public class AbstractCondition extends AbstractQuery {
         return new OrderBy(query, params);
     }
 
-    public Not not() {
-        query.append(" NOT");
-        return new Not(query, params);
-    }
-
     public Exists exists(AbstractQuery subQuery) {
         query.append(" EXISTS (").append(subQuery).append(")");
+        params.addAll(subQuery.getParams());
+        return new Exists(query, params);
+    }
+
+    public Exists notExists(AbstractQuery subQuery) {
+        query.append(" NOT EXISTS (").append(subQuery).append(")");
         params.addAll(subQuery.getParams());
         return new Exists(query, params);
     }
