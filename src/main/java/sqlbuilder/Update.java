@@ -1,7 +1,5 @@
 package sqlbuilder;
 
-import com.sun.istack.internal.NotNull;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,7 +8,7 @@ public class Update extends AbstractQuery {
         super(query, params);
     }
 
-    public Set set(@NotNull final List<String> cols, final List<Object> values) {
+    public Set set(final List<String> cols, final List<Object> values) {
         query.append(" SET ");
         for (int i = 0; i < cols.size(); i++) {
             if (i == cols.size() - 1) {
@@ -23,7 +21,7 @@ public class Update extends AbstractQuery {
         return new Set(query, params);
     }
 
-    public Set set(@NotNull final String col, final Object value) {
+    public Set set(final String col, final Object value) {
         query.append(" SET ").append(col).append(" = ?");
         params.add(value);
         return new Set(query, params);

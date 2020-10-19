@@ -1,7 +1,5 @@
 package sqlbuilder;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,7 +9,7 @@ public class Union extends AbstractQuery {
         super(query, params);
     }
 
-    public Select select(@NotNull final String... cols) {
+    public Select select(final String... cols) {
         query.append(" SELECT ");
         if (cols.length > 0) {
             String colsJoining = Stream.of(cols).collect(Collectors.joining(", "));

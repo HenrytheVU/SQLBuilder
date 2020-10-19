@@ -1,7 +1,5 @@
 package sqlbuilder;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -135,7 +133,7 @@ public class AbstractCondition extends AbstractQuery {
         return new IsNotNull(query, params);
     }
 
-    public In in(@NotNull final Object... filters) {
+    public In in(final Object... filters) {
         query.append(" IN (");
         for (int i = 0; i < filters.length; i++) {
             if (i == filters.length - 1) {
@@ -148,7 +146,7 @@ public class AbstractCondition extends AbstractQuery {
         return new In(query, params);
     }
 
-    public In in(@NotNull final List<Object> filters) {
+    public In in(final List<Object> filters) {
         query.append(" IN (");
         for (int i = 0; i < filters.size(); i++) {
             if (i == filters.size() - 1) {
@@ -161,7 +159,7 @@ public class AbstractCondition extends AbstractQuery {
         return new In(query, params);
     }
 
-    public In notIn(@NotNull final Object... filters) {
+    public In notIn(final Object... filters) {
         query.append(" NOT IN (");
         for (int i = 0; i < filters.length; i++) {
             if (i == filters.length - 1) {
@@ -174,7 +172,7 @@ public class AbstractCondition extends AbstractQuery {
         return new In(query, params);
     }
 
-    public In notIn(@NotNull final List<Object> filters) {
+    public In notIn(final List<Object> filters) {
         query.append(" NOT IN (");
         for (int i = 0; i < filters.size(); i++) {
             if (i == filters.size() - 1) {
