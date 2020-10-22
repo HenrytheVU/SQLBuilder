@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sqlbuilder.SQLBuilder.*;
@@ -55,7 +56,7 @@ public class SQLBuilderTest {
         String expected = "SELECT * FROM Customers WHERE Country = 'Mexico'";
         String expectedWithPlaceHolders = "SELECT * FROM Customers WHERE Country = ?";
 
-        AbstractQuery sql = select().from("Customers").where("Country").equal("Mexico");
+        AbstractQuery sql = select().from("Customers").where("Country").eq("Mexico");
         assertEquals(expected, sql.getQuery());
         assertEquals(expectedWithPlaceHolders, sql.toString());
         assertEquals(expectedWithPlaceHolders, sql.getQueryWithPlaceHolders());
@@ -63,7 +64,7 @@ public class SQLBuilderTest {
         assertEquals("Mexico", sql.getParamObjects()[0]);
 
         String expected1 = "SELECT * FROM Customers WHERE CustomerID = 1";
-        AbstractQuery sql1 = select().from("Customers").where("CustomerID").equal(1);
+        AbstractQuery sql1 = select().from("Customers").where("CustomerID").eq(1);
         assertEquals(expected1, sql1.getQuery());
         assertEquals(1, sql1.getParamObjects().length);
         assertEquals(1, sql1.getParamObjects()[0]);
@@ -72,13 +73,13 @@ public class SQLBuilderTest {
     @Test
     void selectFromWhereNotEqual() {
         String expected = "SELECT * FROM Customers WHERE Country <> 'Mexico'";
-        AbstractQuery sql = select().from("Customers").where("Country").notEqual("Mexico");
+        AbstractQuery sql = select().from("Customers").where("Country").ne("Mexico");
         assertEquals(expected, sql.getQuery());
         assertEquals(1, sql.getParamObjects().length);
         assertEquals("Mexico", sql.getParamObjects()[0]);
 
         String expected1 = "SELECT * FROM Customers WHERE CustomerID <> 1";
-        AbstractQuery sql1 = select().from("Customers").where("CustomerID").notEqual(1);
+        AbstractQuery sql1 = select().from("Customers").where("CustomerID").ne(1);
         assertEquals(expected1, sql1.getQuery());
         assertEquals(1, sql1.getParamObjects().length);
         assertEquals(1, sql1.getParamObjects()[0]);
@@ -87,13 +88,13 @@ public class SQLBuilderTest {
     @Test
     void selectFromWhereGreaterThan() {
         String expected = "SELECT * FROM Customers WHERE Country > 'Mexico'";
-        AbstractQuery sql = select().from("Customers").where("Country").greaterThan("Mexico");
+        AbstractQuery sql = select().from("Customers").where("Country").gt("Mexico");
         assertEquals(expected, sql.getQuery());
         assertEquals(1, sql.getParamObjects().length);
         assertEquals("Mexico", sql.getParamObjects()[0]);
 
         String expected1 = "SELECT * FROM Customers WHERE CustomerID > 1";
-        AbstractQuery sql1 = select().from("Customers").where("CustomerID").greaterThan(1);
+        AbstractQuery sql1 = select().from("Customers").where("CustomerID").gt(1);
         assertEquals(expected1, sql1.getQuery());
         assertEquals(1, sql1.getParamObjects().length);
         assertEquals(1, sql1.getParamObjects()[0]);
@@ -102,13 +103,13 @@ public class SQLBuilderTest {
     @Test
     void selectFromWhereGreaterOrEqual() {
         String expected = "SELECT * FROM Customers WHERE Country >= 'Mexico'";
-        AbstractQuery sql = select().from("Customers").where("Country").greaterOrEqual("Mexico");
+        AbstractQuery sql = select().from("Customers").where("Country").ge("Mexico");
         assertEquals(expected, sql.getQuery());
         assertEquals(1, sql.getParamObjects().length);
         assertEquals("Mexico", sql.getParamObjects()[0]);
 
         String expected1 = "SELECT * FROM Customers WHERE CustomerID >= 1";
-        AbstractQuery sql1 = select().from("Customers").where("CustomerID").greaterOrEqual(1);
+        AbstractQuery sql1 = select().from("Customers").where("CustomerID").ge(1);
         assertEquals(expected1, sql1.getQuery());
         assertEquals(1, sql1.getParamObjects().length);
         assertEquals(1, sql1.getParamObjects()[0]);
@@ -117,13 +118,13 @@ public class SQLBuilderTest {
     @Test
     void selectFromWhereLessThan() {
         String expected = "SELECT * FROM Customers WHERE Country < 'Mexico'";
-        AbstractQuery sql = select().from("Customers").where("Country").lessThan("Mexico");
+        AbstractQuery sql = select().from("Customers").where("Country").lt("Mexico");
         assertEquals(expected, sql.getQuery());
         assertEquals(1, sql.getParamObjects().length);
         assertEquals("Mexico", sql.getParamObjects()[0]);
 
         String expected1 = "SELECT * FROM Customers WHERE CustomerID < 10";
-        AbstractQuery sql1 = select().from("Customers").where("CustomerID").lessThan(10);
+        AbstractQuery sql1 = select().from("Customers").where("CustomerID").lt(10);
         assertEquals(expected1, sql1.getQuery());
         assertEquals(1, sql1.getParamObjects().length);
         assertEquals(10, sql1.getParamObjects()[0]);
@@ -132,13 +133,13 @@ public class SQLBuilderTest {
     @Test
     void selectFromWhereLessOrEqual() {
         String expected = "SELECT * FROM Customers WHERE Country <= 'Mexico'";
-        AbstractQuery sql = select().from("Customers").where("Country").lessOrEqual("Mexico");
+        AbstractQuery sql = select().from("Customers").where("Country").le("Mexico");
         assertEquals(expected, sql.getQuery());
         assertEquals(1, sql.getParamObjects().length);
         assertEquals("Mexico", sql.getParamObjects()[0]);
 
         String expected1 = "SELECT * FROM Customers WHERE CustomerID <= 1";
-        AbstractQuery sql1 = select().from("Customers").where("CustomerID").lessOrEqual(1);
+        AbstractQuery sql1 = select().from("Customers").where("CustomerID").le(1);
         assertEquals(expected1, sql1.getQuery());
         assertEquals(1, sql1.getParamObjects().length);
         assertEquals(1, sql1.getParamObjects()[0]);
@@ -633,6 +634,14 @@ public class SQLBuilderTest {
         String expected = "SELECT DISTINCT * FROM Persons WHERE FirstName LIKE '%Henry%' AND LastName = 'Vu'";
         AbstractQuery aq = selectDistinct().from("Persons").where("FirstName").contains("Henry").and("LastName").eq("Vu");
         assertEquals(expected, aq.getQuery());
+    }
+
+    @Test
+    void selectDistinctFromWhereInAnd() {
+        String expected = "SELECT DISTINCT * FROM Projects WHERE ProjectName IN ('P1', 'P2', 'P3') AND Active = 1";
+        AbstractQuery aq = selectDistinct().from("Projects").where("ProjectName").in("P1", "P2", "P3").and("Active").eq(1);
+        assertEquals(expected, aq.getQuery());
+        aq.getParams().forEach(System.out::println);
 
     }
 

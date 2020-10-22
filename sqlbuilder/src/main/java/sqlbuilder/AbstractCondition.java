@@ -1,18 +1,13 @@
 package sqlbuilder;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class AbstractCondition extends AbstractQuery {
     public AbstractCondition(StringBuilder query, List<Object> params) {
         super(query, params);
-    }
-
-    public AbstractOperator equal(Object value) {
-        query.append(" = ?");
-        params.add(value);
-        return new AbstractOperator(query, params);
     }
 
     public AbstractOperator eq(Object value) {
@@ -33,20 +28,8 @@ public class AbstractCondition extends AbstractQuery {
         return new AbstractOperator(query, params);
     }
 
-    public AbstractOperator notEqual(Object value) {
-        query.append(" <> ?");
-        params.add(value);
-        return new AbstractOperator(query, params);
-    }
-
     public AbstractOperator ne(Object value) {
         query.append(" <> ?");
-        params.add(value);
-        return new AbstractOperator(query, params);
-    }
-
-    public AbstractOperator greaterThan(Object value) {
-        query.append(" > ?");
         params.add(value);
         return new AbstractOperator(query, params);
     }
@@ -57,32 +40,14 @@ public class AbstractCondition extends AbstractQuery {
         return new AbstractOperator(query, params);
     }
 
-    public AbstractOperator greaterOrEqual(Object value) {
-        query.append(" >= ?");
-        params.add(value);
-        return new AbstractOperator(query, params);
-    }
-
     public AbstractOperator ge(Object value) {
         query.append(" >= ?");
         params.add(value);
         return new AbstractOperator(query, params);
     }
 
-    public AbstractOperator lessThan(Object value) {
-        query.append(" < ?");
-        params.add(value);
-        return new AbstractOperator(query, params);
-    }
-
     public AbstractOperator lt(Object value) {
         query.append(" < ?");
-        params.add(value);
-        return new AbstractOperator(query, params);
-    }
-
-    public AbstractOperator lessOrEqual(Object value) {
-        query.append(" <= ?");
         params.add(value);
         return new AbstractOperator(query, params);
     }
@@ -135,55 +100,38 @@ public class AbstractCondition extends AbstractQuery {
 
     public AbstractOperator in(final Object... filters) {
         query.append(" IN (");
-        for (int i = 0; i < filters.length; i++) {
-            if (i == filters.length - 1) {
-                query.append("?)");
-            } else {
-                query.append("?, ");
-            }
-        }
-        Collections.addAll(params, filters);
-        return new AbstractOperator(query, params);
-    }
-
-    public AbstractOperator in(final List<Object> filters) {
-        query.append(" IN (");
-        for (int i = 0; i < filters.size(); i++) {
-            if (i == filters.size() - 1) {
-                query.append("?)");
-            } else {
-                query.append("?, ");
-            }
-        }
-        params.addAll(filters);
-        return new AbstractOperator(query, params);
+        return getAbstractOperator(filters);
     }
 
     public AbstractOperator notIn(final Object... filters) {
         query.append(" NOT IN (");
-        for (int i = 0; i < filters.length; i++) {
-            if (i == filters.length - 1) {
-                query.append("?)");
-            } else {
-                query.append("?, ");
+        return getAbstractOperator(filters);
+    }
+
+    private AbstractOperator getAbstractOperator(Object[] filters) {
+        if (filters.length == 1 && filters[0] instanceof Collection) {
+            Collection filterCollection = (Collection) filters[0];
+            for (int i = 0; i < filterCollection.size(); i++) {
+                if (i == filterCollection.size() - 1) {
+                    query.append("?)");
+                } else {
+                    query.append("?, ");
+                }
             }
+            params.addAll(filterCollection);
+        } else {
+            for (int i = 0; i < filters.length; i++) {
+                if (i == filters.length - 1) {
+                    query.append("?)");
+                } else {
+                    query.append("?, ");
+                }
+            }
+            Collections.addAll(params, filters);
         }
-        Collections.addAll(params, filters);
         return new AbstractOperator(query, params);
     }
 
-    public AbstractOperator notIn(final List<Object> filters) {
-        query.append(" NOT IN (");
-        for (int i = 0; i < filters.size(); i++) {
-            if (i == filters.size() - 1) {
-                query.append("?)");
-            } else {
-                query.append("?, ");
-            }
-        }
-        params.addAll(filters);
-        return new AbstractOperator(query, params);
-    }
 
     public AbstractOperator in(AbstractQuery subQuery) {
         query.append(" IN (").append(subQuery.query).append(")");
