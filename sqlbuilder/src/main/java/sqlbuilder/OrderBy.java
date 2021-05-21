@@ -1,34 +1,64 @@
 package sqlbuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderBy extends AbstractQuery {
-    public OrderBy(StringBuilder query, List<Object> params) {
-        super(query, params);
-    }
+	public enum SortOrder {
+		ASC("ASC"), DESC("DESC");
 
-    public FetchNextRowsOnly fetchNexRowsOnly(int n) {
-        query.append(" FETCH NEXT ").append(n).append(" ROWS ONLY");
-        return new FetchNextRowsOnly(query, params);
-    }
+		String sqlRep;
 
-    public Offset offset(Integer n) {
-        query.append(" OFFSET ").append(n).append(" ROWS");
-        return new Offset(query, params);
-    }
+		SortOrder(String sqlRep) {
+			this.sqlRep = sqlRep;
+		}
 
-    public Asc asc() {
-        query.append(" ASC");
-        return new Asc(query, params);
-    }
+		static Map<String, SortOrder> validSortOrders = new HashMap<>();
 
-    public Desc desc() {
-        query.append(" DESC");
-        return new Desc(query, params);
-    }
+		static {
+			validSortOrders.put("ASC", ASC);
+			validSortOrders.put("DESC", DESC);
+		}
 
-    public Count count(String col) {
-        query.append(" COUNT (").append(col).append(")");
-        return new Count(query, params);
-    }
+		public static SortOrder getEnum(String sqlRep) {
+			if (!validSortOrders.containsKey(sqlRep.toUpperCase())) {
+				return ASC;
+			}
+			return validSortOrders.get(sqlRep.toUpperCase());
+		}
+
+		public String getSqlRep() {
+			return this.sqlRep;
+		}
+
+		@Override
+		public String toString() {
+			return this.sqlRep;
+		}
+	}
+
+	public OrderBy(StringBuilder query, List<Object> params) {
+		super(query, params);
+	}
+
+	public FetchNextRowsOnly fetchNexRowsOnly(int n) {
+		query.append(" FETCH NEXT ").append(n).append(" ROWS ONLY");
+		return new FetchNextRowsOnly(query, params);
+	}
+
+	public Offset offset(int n) {
+		query.append(" OFFSET ").append(n).append(" ROWS");
+		return new Offset(query, params);
+	}
+
+	public OrderBy sortOrder(SortOrder sortOrder) {
+		query.append(" " + sortOrder.getSqlRep());
+		return new OrderBy(query, params);
+	}
+
+	public Count count(String col) {
+		query.append(" COUNT (").append(col).append(")");
+		return new Count(query, params);
+	}
 }
