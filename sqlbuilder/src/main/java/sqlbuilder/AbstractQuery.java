@@ -3,6 +3,7 @@ package sqlbuilder;
 import sqlbuilder.exception.UnsupportedDataTypeException;
 import sqlbuilder.function.Function;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,7 +50,10 @@ public abstract class AbstractQuery {
 		if (obj == null) {
 			return "null";
 		}
-		if (obj instanceof String || obj instanceof LocalDate) {
+		if (obj instanceof String) {
+			return String.format("'%s'", obj.toString().replace("'", "''"));
+		}
+		if (obj instanceof LocalDate || obj instanceof Timestamp) {
 			return String.format("'%s'", obj.toString());
 		}
 		if (obj instanceof Integer || obj instanceof Long || obj instanceof Short || obj instanceof Function || obj instanceof Boolean) {
